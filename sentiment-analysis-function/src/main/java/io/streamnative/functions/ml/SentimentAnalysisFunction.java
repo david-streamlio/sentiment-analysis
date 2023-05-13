@@ -16,19 +16,19 @@ public class SentimentAnalysisFunction implements Function<String, AnalyzedTweet
 
     static StanfordCoreNLP pipeline;
 
-    boolean initalized = false;
+    boolean initialized = false;
 
     public void initialize(Context context) {
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, parse, sentiment");
         pipeline = new StanfordCoreNLP(props);
-        initalized = true;
+        initialized = true;
     }
 
     @Override
     public AnalyzedTweet process(String tweet, Context ctx) throws Exception {
 
-        if (!initalized) {
+        if (!initialized) {
             initialize(ctx);
         }
 

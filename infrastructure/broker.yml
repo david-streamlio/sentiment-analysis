@@ -11,12 +11,11 @@ services:
       - /Users/david/clone-zone/personal/sentiment-analysis/sentiment-analysis-function/target:/functionSource
     command: >
       bash -c "bin/apply-config-from-env.py conf/standalone.conf &&
-      exec bin/pulsar standalone -nss" # disable stream storage and functions worker
+      exec bin/pulsar standalone -nss" # disable stream storage
     environment:
       allowAutoTopicCreationType: partitioned
       brokerDeleteInactiveTopicsEnabled: "false"
       PULSAR_PREFIX_functionsWorkerEnabled: "true"
-      PULSAR_PREFIX_webServicePort: 8080
     ports:
       - 6650:6650
       - 8080:8080

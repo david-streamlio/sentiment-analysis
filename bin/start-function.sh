@@ -11,3 +11,7 @@ docker exec -it pulsar /pulsar/bin/pulsar-admin functions create \
 sleep 5
 
 docker exec -it pulsar /pulsar/bin/pulsar-admin functions get --name SentimentAnalysisFunction
+
+sleep 10
+
+docker exec -it pulsar /pulsar/bin/pulsar-admin functions stats --name SentimentAnalysisFunction

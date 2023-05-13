@@ -1,8 +1,8 @@
-package io.streamnative.functions.ml;
+package io.streamnative.functions.ml.data;
 
 import java.util.Random;
 
-public class RandomTweetGenerator {
+public class RandomTweetRepository implements TweetRepository {
 
     private static final String[] SENTENCES = {"All they could see was the blue water surrounding their sailboat.\n",
             "Everyone says they love nature until they realize how dangerous she can be.\n",
@@ -24,7 +24,8 @@ public class RandomTweetGenerator {
 
     private final Random random = new Random();
 
-    public String get() {
-       return SENTENCES[random.nextInt(SENTENCES.length)];
+    @Override
+    public String getRandomTweet() {
+        return SENTENCES[random.nextInt(SENTENCES.length)];
     }
 }

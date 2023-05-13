@@ -1,0 +1,3 @@
+name: tweetSim
+description: Simulate Tweet Data
+sourceClass: io.streamnative.functions.ml.TweetSource

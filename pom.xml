@@ -80,6 +80,32 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <!-- To run: mvn docker:build -->
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.43.0</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>localhost:32000/${artifactId}:${project.version}</name>
+                            <build>
+                                <contextDir>${basedir}/src/main/docker</contextDir>
+                                <assemblies>
+                                    <assembly>
+                                        <descriptorRef>artifact</descriptorRef>
+                                    </assembly>
+                                </assemblies>
+                                <tags>
+                                    <tag>latest</tag>
+                                </tags>
+                            </build>
+                        </image>
+                    </images>
+                    <registry>localhost:32000</registry>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

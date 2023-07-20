@@ -1,0 +1,39 @@
+apiVersion: compute.functionmesh.io/v1alpha1
+kind: Source
+metadata:
+  name: tweet-simulator
+spec:
+  image: localhost:32000/tweet-simulator:1.0.0
+  className: io.streamnative.functions.ml.TweetSource
+  tenant: public
+  namespace: default
+  clusterName: test-pulsar
+  replicas: 1
+  maxReplicas: 2
+  sourceConfig:
+    name: "value"
+  output:
+    topic: persistent://public/default/tweet-input-topic
+    typeClassName: java.lang.String
+  resources:
+    requests:
+      cpu: "0.3"
+      memory: 1G
+    limits:
+      cpu: "0.5"
+      memory: 1.1G
+  pulsar:
+    pulsarConfig: "pulsar"
+  java:
+    jar: /pulsar/tweet-simulator-1.0.0.jar
+    # use "" to read jar from local file system
+    jarLocation: ""
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pulsar
+data:
+  webServiceURL: http://10.152.183.143:8080
+  brokerServiceURL: pulsar://10.152.183.143:6650

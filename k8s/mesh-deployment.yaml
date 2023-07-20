@@ -1,0 +1,96 @@
+apiVersion: compute.functionmesh.io/v1alpha1
+kind: FunctionMesh
+metadata:
+  name: sentiment-analysis
+spec:
+  functions:
+    - name: sentiment-analyzer
+      image: localhost:32000/sentiment-analysis-function:1.0.0
+      className: io.streamnative.functions.ml.SentimentAnalysisFunction
+      forwardSourceMessageProperty: true
+      maxPendingAsyncRequests: 1000
+      replicas: 1
+      maxReplicas: 5
+      logTopic: persistent://public/default/logging-function-logs
+      input:
+        topics:
+          - persistent://public/default/tweet-input-topic
+        typeClassName: java.lang.String
+      output:
+        topic: persistent://public/default/tweet-output-topic
+        typeClassName: io.streamnative.functions.ml.AnalyzedTweet
+      resources:
+        requests:
+          cpu: "0.1"
+          memory: 1G
+        limits:
+          cpu: "0.2"
+          memory: 1.1G
+      pulsar:
+        pulsarConfig: "pulsar"
+      volumeMounts:
+        - mountPath: /cache
+          name: cache-volume
+      pod:
+        env:
+          - name: EXAMPLE_VARIABLE
+            value: exampleValue
+        labels:
+          "location": "mtv"
+        annotations:
+          "managed-function": "true"
+        volumes:
+          - name: cache-volume
+            emptyDir: { }
+        imagePullSecrets:
+          - name: regcred
+        initContainers:
+          - name: init-function
+            image: busybox:1.28
+            command: [ 'sh', '-c', 'echo The app is running! && sleep 30' ]
+        sidecars:
+          - name: sidecar-function
+            image: busybox:1.28
+            command: [ 'sh', '-c', 'echo The app is running! && sleep 30000' ]
+      java:
+        jar: /pulsar/sentiment-analysis-function-1.0.0.jar
+        # use "" to read jar from local file system
+        jarLocation: ""
+      clusterName: test-pulsar
+      autoAck: true
+  sources:
+    - name: tweet-simulator
+      image: localhost:32000/tweet-simulator:1.0.0
+      className: io.streamnative.functions.ml.TweetSource
+      tenant: public
+      namespace: default
+      clusterName: test-pulsar
+      replicas: 1
+      maxReplicas: 2
+      sourceConfig:
+        name: "value"
+      output:
+        topic: persistent://public/default/tweet-input-topic
+        typeClassName: java.lang.String
+      resources:
+        requests:
+          cpu: "0.3"
+          memory: 1G
+        limits:
+          cpu: "0.5"
+          memory: 1.1G
+      pulsar:
+        pulsarConfig: "pulsar"
+      java:
+        jar: /pulsar/tweet-simulator-1.0.0.jar
+        # use "" to read jar from local file system
+        jarLocation: ""
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pulsar
+data:
+  webServiceURL: http://10.152.183.143:8080
+  brokerServiceURL: pulsar://10.152.183.143:6650

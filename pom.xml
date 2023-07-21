@@ -6,6 +6,7 @@
 
     <groupId>io.streamnative</groupId>
     <artifactId>sentiment-analysis</artifactId>
+    <name>Sentiment Analysis</name>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
@@ -19,6 +20,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <pulsar.version>2.9.3</pulsar.version>
+        <docker.repo>localhost:32000</docker.repo>
     </properties>
 
     <dependencies>
@@ -39,6 +41,7 @@
                     <artifactId>grpc-all</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -89,7 +92,7 @@
                 <configuration>
                     <images>
                         <image>
-                            <name>localhost:32000/${artifactId}:${project.version}</name>
+                            <name>${docker.repo}/${artifactId}:${project.version}</name>
                             <build>
                                 <contextDir>${basedir}/src/main/docker</contextDir>
                                 <assemblies>
@@ -103,7 +106,7 @@
                             </build>
                         </image>
                     </images>
-                    <registry>localhost:32000</registry>
+                    <registry>${docker.repo}</registry>
                 </configuration>
             </plugin>
         </plugins>

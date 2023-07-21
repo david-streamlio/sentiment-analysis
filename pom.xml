@@ -85,29 +85,29 @@
             </plugin>
 
             <plugin>
-                <!-- To run: mvn docker:build -->
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.43.0</version>
-                <configuration>
-                    <images>
-                        <image>
-                            <name>${docker.repo}/${artifactId}:${project.version}</name>
-                            <build>
-                                <contextDir>${basedir}/src/main/docker</contextDir>
-                                <assemblies>
-                                    <assembly>
-                                        <descriptorRef>artifact</descriptorRef>
-                                    </assembly>
-                                </assemblies>
-                                <tags>
-                                    <tag>latest</tag>
-                                </tags>
-                            </build>
-                        </image>
-                    </images>
-                    <registry>${docker.repo}</registry>
-                </configuration>
+            <!-- To run: mvn docker:build -->
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.43.0</version>
+            <configuration>
+                <images>
+                    <image>
+                        <name>${docker.repo}/${project.artifactId}:${project.version}</name>
+                        <build>
+                            <contextDir>${project.basedir}/src/main/docker</contextDir>
+                            <assemblies>
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                            </assemblies>
+                            <tags>
+                                <tag>latest</tag>
+                            </tags>
+                        </build>
+                    </image>
+                </images>
+                <registry>${docker.repo}</registry>
+            </configuration>
             </plugin>
         </plugins>
     </build>
